@@ -5,13 +5,23 @@ let PromiseReq = {};
 /*
 conf: {
 	type:"GET",
-	path:""
+	path:"",
+	nocache:false
 }
 */
 PromiseReq.getServerFile = conf=>{
 	return new Promise((res,rej)=>{
 		let xhr = new XMLHttpRequest();
 		xhr.open(conf.type || "GET", conf.path);
+		if(conf.nocache){
+			xhr.setRequestHeader("Cache-Control", "no-cache");
+			xhr.setRequestHeader("Pragma", "no-cache");
+		}
+		if(Array.isArray(conf.customHeaders)){
+			conf.customHeaders.forEach(e=>{
+				xhr.setRequestHeader(e.name || "", e.value || "");
+			});
+		}
 		xhr.onreadystatechange = $=>{
 			const {status, statusText, readyState, responseText} = xhr;
 			if(readyState === 4 && status === 200)
@@ -24,8 +34,8 @@ PromiseReq.getServerFile = conf=>{
 	});
 }
 
-PromiseReq.getFile = async function(path){
-	return {data:await PromiseReq.getServerFile({path})};
+PromiseReq.getFile = async function(path, nocache, customHeaders){
+	return {data:await PromiseReq.getServerFile({path, nocache, customHeaders})};
 };
 
 /**
@@ -57,15 +67,26 @@ PromiseReq.sendToServer = (config, data)=>{
 						data = encodeURIComponent(data);
 					}
 				}
-				if(/function/gi.test(typeof data)){
+				else if(/function/gi.test(typeof data)){
 					rej("Data should not be a function!");
 				}
 				else{
 					data = String(data);
 				}
-			}xhr.send(data);
-			res('Everything went smoothly!' + `
-				Data sent: [${data}] to ${config.path} via ${config.type}`);
+			}
+			xhr.onreadystatechange = ()=>{
+				if(xhr.readyState === 4){
+					if(xhr.status === 200){
+						res({response:xhr.responseText,
+						info: `Everything went smoothly!
+Data sent: [${data}] to ${config.path} via ${config.type}`});
+					}
+					else
+						throw "Something went wrong!";
+				}
+			}
+			xhr.send(data);
+			
 		}catch(e){
 			rej(e);
 		}
