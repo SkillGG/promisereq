@@ -6,7 +6,8 @@ let PromiseReq = {};
 conf: {
 	type:"GET",
 	path:"",
-	nocache:false
+	nocache:false,
+	customHeaders:[]
 }
 */
 PromiseReq.getServerFile = conf=>{
