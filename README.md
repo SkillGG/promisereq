@@ -16,8 +16,11 @@ PromiseReq.getFileFromServer(ConfigObject)
 
 #### Parameters
 `ConfigObject` - object that contains:
+
 `path` - path to file.*[needed]*
+
 `nocache` - flag, that adds `Pragma:No-cache` and `Cache-Control:No-Cache` flags if true.*[optional] (default: False)*
+
 `customHeaders` - array of objects that contain `name` (name of header) and `value` (value of header) *[optional] (default: null)*
 
 #### Returns
