@@ -1,5 +1,7 @@
 let PromiseReq = {};
 
+let PRq = PromiseReq;
+
 //PromiseReq.getServerFile() & .sendToServer()
 
 /*
@@ -28,10 +30,10 @@ PromiseReq.getServerFile = conf=>{
 			if(readyState === 4 && status === 200)
 				res(responseText);
 			else if(readyState === 4 && status !== 200){
-				
 				rej(`There was a problem with getting file! ${status}(${statusText}) :: ${readyState}!`);
 			}
-		};xhr.send();
+		};
+		xhr.send();
 	});
 }
 
@@ -94,6 +96,9 @@ Data sent: [${data}] to ${config.path} via ${config.type}`});
 	});
 
 }
+
+Object.freeze(PromiseReq);
+Object.freeze(PRq);
 
 /*
 
