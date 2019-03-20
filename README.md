@@ -30,5 +30,5 @@ Rejects when file has been not send. Rejected is string showing `status`, `statu
 
 #### Example
 ```javascript
-let fileData = await PromiseReq({path:"file.txt", nocache:true, customHeaders:[{name: "Accept", value:"application/json"}]});
+let fileData = await PromiseReq({path:"file.json", nocache:true, customHeaders:[{name: "Accept", value:"application/json"}]});
 ```
